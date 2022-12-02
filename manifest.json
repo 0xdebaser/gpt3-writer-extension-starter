@@ -14,5 +14,14 @@
     "default_popup": "index.html",
     "default_title": "Shake-It"
   },
-  "permissions": ["contextMenus", "tabs", "storage"]
+  "background": {
+    "service_worker": "scripts/contextMenuServiceWorker.js"
+  },
+  "permissions": ["contextMenus", "tabs", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["scripts/content.js"]
+    }
+  ]
 }
