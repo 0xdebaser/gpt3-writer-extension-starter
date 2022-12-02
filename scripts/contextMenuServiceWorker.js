@@ -47,11 +47,32 @@ function getKey() {
 function sendMessage(content) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const activeTab = tabs[0].id;
-
     // chrome.tabs.sendMessage(tab, payload, callback)
     chrome.tabs.sendMessage(
       activeTab,
       { message: "inject", content },
+      (response) => {
+        // if (response.hasOwnPropery("status") && response.status === "failed") {
+        //   console.log("injection failed.");
+        console.log(response);
+      }
+    );
+  });
+}
+
+// function added by 0xdebaser
+function sendMessage2(selectionText, replacementText) {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const activeTab = tabs[0].id;
+
+    // chrome.tabs.sendMessage(tab, payload, callback)
+    chrome.tabs.sendMessage(
+      activeTab,
+      {
+        message: "inject",
+        selectionText: selectionText,
+        replacementText: replacementText,
+      },
       (response) => {
         if (response.status === "failed") {
           console.log("injection failed.");
@@ -59,6 +80,21 @@ function sendMessage(content) {
       }
     );
   });
+}
+
+//function added by 0xdebaser
+async function generateAnSend({ selectionText }) {
+  try {
+    sendMessage("generating...");
+    const prompt = `Rewrite the following text in the style of William Shakespeare: ${selectionText}.`;
+    const response = await generate(prompt);
+    const replacementText = response.text;
+    console.log(replacementText);
+    sendMessage2(selectionText, replacementText);
+  } catch (error) {
+    console.error(error);
+    sendMessage(error.toString());
+  }
 }
 
 console.log("Hello from contextMenuServiceWorker!");

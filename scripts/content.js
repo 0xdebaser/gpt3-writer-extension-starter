@@ -1,3 +1,5 @@
+//import findAndReplaceDOMText from "findandreplacedomtext";
+
 function insert(content) {
   // Find Calmly editor input section
   const elements = document.getElementsByClassName("droid");
@@ -35,14 +37,20 @@ function insert(content) {
   });
 }
 
+function replace() {}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log("hello from the content message listener!");
   if (request.message === "inject") {
-    const { content } = request;
-    const result = insert(content);
-    if (!result) {
-      sendResponse({ status: "failed" });
-    } else {
-      sendResponse({ status: "success" });
-    }
+    const { selectionText, replacementText } = request;
+    console.log(selectionText);
+    console.log(replacementText);
+    sendResponse({ status: "success" });
+    // const result = insert(content);
+    // if (!result) {
+    //   sendResponse({ status: "failed" });
+    // } else {
+    //   sendResponse({ status: "success" });
+    // }
   }
 });
