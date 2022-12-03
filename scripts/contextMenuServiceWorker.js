@@ -20,19 +20,6 @@ async function generate(prompt) {
   return completion.choices.pop();
 }
 
-async function generateCompletionAction({ selectionText }) {
-  try {
-    sendMessage("generating...");
-    const prompt = `Rewrite the following text in the style of William Shakespeare: ${selectionText}.`;
-    const baseCompletion = await generate(prompt);
-    console.log(baseCompletion.text);
-    sendMessage(baseCompletion.text);
-  } catch (error) {
-    console.error(error);
-    sendMessage(error.toString());
-  }
-}
-
 function getKey() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(["openai-key"], (result) => {
@@ -60,7 +47,6 @@ function sendMessage(content) {
   });
 }
 
-//function added by 0xdebaser
 async function generateAndSend({ selectionText }) {
   const loadingText = "generating...";
   try {
