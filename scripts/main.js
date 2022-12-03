@@ -1,4 +1,4 @@
-import findAndReplaceDOMText from "findandreplacedomtext";
+import { findAndReplaceDOMText } from "../node_modules/findandreplacedomtext";
 
 function insert(content) {
   // Find Calmly editor input section
@@ -41,16 +41,17 @@ function replace() {}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log("hello from the content message listener!");
-  if (request.message === "inject") {
-    const { selectionText, replacementText } = request;
-    console.log(selectionText);
-    console.log(replacementText);
-    sendResponse({ status: "success" });
-    // const result = insert(content);
-    // if (!result) {
-    //   sendResponse({ status: "failed" });
-    // } else {
-    //   sendResponse({ status: "success" });
-    // }
-  }
+  console.log(request);
+  // if (request.message === "inject") {
+  //   const { selectionText, replacementText } = request;
+  //   console.log(selectionText);
+  //   console.log(replacementText);
+  //   sendResponse({ status: "success" });
+  // const result = insert(content);
+  // if (!result) {
+  //   sendResponse({ status: "failed" });
+  // } else {
+  //   sendResponse({ status: "success" });
+  // }
+  //}
 });

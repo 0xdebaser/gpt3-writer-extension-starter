@@ -1,12 +1,21 @@
-// see https://meet-martin.medium.com/using-javascript-es6-import-export-modules-in-chrome-extensions-f63a3a0d2736
+let targetEl;
 
-"use strict";
+async function replaceAllDomInstances(target, replacement) {
+  console.log("Target:", target);
+  console.log("Replacement:", replacement);
+  if (targetEl && targetEl.textContent) {
+    targetEl.textContent = targetEl.textContent.replace(target, replacement);
+    return "success";
+  } else return "failure";
+}
 
-const script = document.createElement("script");
-script.setAttribute("type", "module");
-script.setAttribute("src", chrome.extension.getURL("main.js"));
-const head =
-  document.head ||
-  document.getElementsByTagName("head")[0] ||
-  document.documentElement;
-head.insertBefore(script, head.lastChild);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log(request);
+  const { target, replacement } = request.content;
+  replaceAllDomInstances(target, replacement.trimStart());
+  sendResponse({ status: "success" });
+});
+
+window.addEventListener("contextmenu", (event) => {
+  targetEl = event.target;
+});

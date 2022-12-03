@@ -23,6 +23,5 @@
       "matches": ["http://*/*", "https://*/*"],
       "js": ["scripts/content.js"]
     }
-  ],
-  "web_accessible_resources": ["scripts/main.js", "scripts/my-script.js"]
+  ]
 }
