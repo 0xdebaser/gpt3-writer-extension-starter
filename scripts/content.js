@@ -10,10 +10,16 @@ async function replaceAllDomInstances(target, replacement) {
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(request);
-  const { target, replacement } = request.content;
-  replaceAllDomInstances(target, replacement.trimStart());
-  sendResponse({ status: "success" });
+  if (request.content === "no api key!") {
+    alert(
+      "Using Shake It requires you to enter your own OpenAI api key. To get one, visit: https://beta.openai.com/account/api-keys."
+    );
+    sendResponse({ status: "success" });
+  } else {
+    const { target, replacement } = request.content;
+    replaceAllDomInstances(target, replacement.trimStart());
+    sendResponse({ status: "success" });
+  }
 });
 
 window.addEventListener("contextmenu", (event) => {

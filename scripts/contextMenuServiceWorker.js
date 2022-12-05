@@ -26,7 +26,7 @@ function getKey() {
       if (result["openai-key"]) {
         const decodedKey = atob(result["openai-key"]);
         resolve(decodedKey);
-      }
+      } else reject("no api key!");
     });
   });
 }
@@ -50,24 +50,30 @@ function sendMessage(content) {
 async function generateAndSend({ selectionText }) {
   const loadingText = "generating...";
   try {
-    sendMessage({ target: selectionText, replacement: loadingText });
-    const prompt = `Rewrite the following text in the style of William Shakespeare: ${selectionText}.`;
-    const response = await generate(prompt);
-    const replacementText = response.text;
-    console.log(replacementText);
-    sendMessage({ target: loadingText, replacement: replacementText });
+    const key = await getKey();
+    console.log(key);
+    if (!key) {
+      console.log("No key detected.");
+      sendMessage({ error: "no API key!" });
+    } else {
+      sendMessage({ target: selectionText, replacement: loadingText });
+      const prompt = `Rewrite the following text in the style of William Shakespeare: ${selectionText}.`;
+      const response = await generate(prompt);
+      const replacementText = response.text;
+      console.log(replacementText);
+      sendMessage({ target: loadingText, replacement: replacementText });
+    }
   } catch (error) {
-    console.error(error);
     sendMessage(error.toString());
   }
 }
 
-console.log("Hello from contextMenuServiceWorker!");
-
-chrome.contextMenus.create({
-  id: "context-run",
-  title: "Shake It!",
-  contexts: ["selection"],
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "context-run",
+    title: "Shake It!",
+    contexts: ["selection"],
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(generateAndSend);
